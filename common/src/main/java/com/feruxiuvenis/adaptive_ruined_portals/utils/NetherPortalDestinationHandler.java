@@ -40,6 +40,13 @@ public final class NetherPortalDestinationHandler {
         NetherTargetResult result =
                 new NetherTargetResult(netherPos, targetBiome);
 
+        LOGGER.info(
+                "[DESTINATION HANDLER] Overworld Pos: {} -> Nether Pos: {} | Sampled Biome: {}",
+                overworldPos.toShortString(),
+                netherPos.toShortString(),
+                result.getBiomePath()
+        );
+
         return result;
     }
 

@@ -44,6 +44,8 @@ public abstract class RuinedPortalPieceMixin {
 
         BlockPos overworldPos = self.getBoundingBox().getCenter();
 
+        LOGGER.info("[MIXIN] RuinedPortalPiece.postProcess triggered at {}", overworldPos.toShortString());
+
         if (PortalSurroundingProcessor.NETHER_GENERATION_PROVIDER == null) {
             LOGGER.warn("[MIXIN] NetherGenerationProvider has not been initialized yet.");
             return;
@@ -59,9 +61,17 @@ public abstract class RuinedPortalPieceMixin {
             return;
         }
 
-        target.getBiomeKey()
-                .map(PortalBlockThemes::getTheme)
-                .ifPresent(theme -> applyTheme(level, self.getBoundingBox(), theme, random));
+        LOGGER.info("[MIXIN] Target biome resolved: {}", target.getBiomePath());
+
+        var theme = target.getBiomeKey().map(PortalBlockThemes::getTheme).orElse(null);
+
+        if (theme == null) {
+            LOGGER.info("[MIXIN] No theme registered for biome {} — skipping retheme.", target.getBiomePath());
+            return;
+        }
+
+        LOGGER.info("[MIXIN] Applying theme for biome {}", target.getBiomePath());
+        applyTheme(level, self.getBoundingBox(), theme, random);
     }
 
     private static BoundingBox expandedSpreadRegion(BoundingBox pieceBox) {

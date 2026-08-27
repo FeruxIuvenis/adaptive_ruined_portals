@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.feruxiuvenis.adaptive_ruined_portals.mixin",
+  "compatibilityLevel": "JAVA_18",
+  "mixins": [
+    "RuinedPortalPieceMixin"
+  ],
+  "client": [
+    "MixinTitleScreen"
+  ],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

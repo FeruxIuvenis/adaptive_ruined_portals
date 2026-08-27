@@ -40,13 +40,16 @@ public final class PortalBlockThemes {
                                     List.of(
                                             Blocks.CRIMSON_FUNGUS.defaultBlockState(),
                                             Blocks.CRIMSON_ROOTS.defaultBlockState(),
-                                            Blocks.CRIMSON_ROOTS.defaultBlockState()
+                                            Blocks.NETHER_SPROUTS.defaultBlockState()
                                     )
                             ),
                             new SurfaceDecoration(
                                     Set.of(Blocks.CRIMSON_NYLIUM),
                                     0.06F,
-                                    List.of(Blocks.SHROOMLIGHT.defaultBlockState())
+                                    List.of(
+                                            Blocks.SHROOMLIGHT.defaultBlockState(),
+                                            Blocks.CRIMSON_STEM.defaultBlockState()
+                                    )
                             )
                     )
             ),
@@ -64,14 +67,17 @@ public final class PortalBlockThemes {
                                     List.of(
                                             Blocks.WARPED_FUNGUS.defaultBlockState(),
                                             Blocks.WARPED_ROOTS.defaultBlockState(),
-                                            Blocks.WARPED_ROOTS.defaultBlockState(),
+                                            Blocks.NETHER_SPROUTS.defaultBlockState(),
                                             Blocks.TWISTING_VINES.defaultBlockState()
                                     )
                             ),
                             new SurfaceDecoration(
                                     Set.of(Blocks.WARPED_NYLIUM),
                                     0.06F,
-                                    List.of(Blocks.SHROOMLIGHT.defaultBlockState())
+                                    List.of(
+                                            Blocks.SHROOMLIGHT.defaultBlockState(),
+                                            Blocks.WARPED_STEM.defaultBlockState()
+                                    )
                             )
                     )
             ),
@@ -108,7 +114,7 @@ public final class PortalBlockThemes {
                     List.of(
                             new SurfaceDecoration(
                                     Set.of(Blocks.BLACKSTONE, Blocks.GILDED_BLACKSTONE, Blocks.BASALT),
-                                    0.006F,
+                                    0.01F,
                                     List.of(Blocks.WITHER_SKELETON_SKULL.defaultBlockState())
                             )
                     )

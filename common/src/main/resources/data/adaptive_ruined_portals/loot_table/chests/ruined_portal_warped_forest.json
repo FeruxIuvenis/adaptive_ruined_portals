@@ -2,39 +2,40 @@
   "type": "minecraft:chest",
   "pools": [
     {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "value": "minecraft:chests/ruined_portal"
+        }
+      ]
+    },
+    {
       "rolls": {
         "type": "minecraft:uniform",
-        "min": 2,
-        "max": 4
+        "min": 1,
+        "max": 2
       },
       "entries": [
         {
           "type": "minecraft:item",
           "name": "minecraft:warped_fungus",
-          "weight": 8,
+          "weight": 10,
           "functions": [
             {
               "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 5
-              }
+              "count": { "type": "minecraft:uniform", "min": 1, "max": 5 }
             }
           ]
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:warped_stem",
-          "weight": 5,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 3
-              }
+              "count": { "type": "minecraft:uniform", "min": 1, "max": 3 }
             }
           ]
         },
@@ -44,53 +45,41 @@
           "weight": 10,
           "functions": [
             {
-              "function": "minecraft:enchant_with_levels",
-              "levels": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 4
-              }
+              "function": "minecraft:set_count",
+              "count": { "type": "minecraft:uniform", "min": 1, "max": 3 }
             }
           ]
         },
         {
-          "type": "minecraft:empty",
-          "weight": 4
-        },
-        {
           "type": "minecraft:item",
           "name": "minecraft:ender_pearl",
-          "weight": 4,
+          "weight": 6,
           "functions": [
             {
               "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 3
-              }
+              "count": { "type": "minecraft:uniform", "min": 1, "max": 3 }
             }
           ]
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:warped_nylium",
-          "weight": 9,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 3
-              }
+              "count": { "type": "minecraft:uniform", "min": 1, "max": 3 }
             }
           ]
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:ender_eye",
-          "weight": 1
+          "weight": 3
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 3
         }
       ]
     }

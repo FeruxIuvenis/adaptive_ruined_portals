@@ -10,9 +10,9 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
@@ -70,80 +70,64 @@ public abstract class RuinedPortalPieceMixin {
 
         var theme = target.getBiomeKey().map(PortalBlockThemes::getTheme).orElse(null);
 
-        if (theme == null) {
+        if (theme != null) {
+            LOGGER.info("[MIXIN] Applying theme for biome {}", target.getBiomePath());
+            applyTheme(level, self.getBoundingBox(), theme, random);
+        } else {
             LOGGER.info("[MIXIN] No theme registered for biome {} — skipping retheme.", target.getBiomePath());
-            return;
         }
 
-        LOGGER.info("[MIXIN] Applying theme for biome {}", target.getBiomePath());
-        applyTheme(level, self.getBoundingBox(), theme, random);
+        // --- chest loot override, using the same proven injection point ---
+        applyChestLoot(level, self.getBoundingBox(), target, random);
     }
 
-    @Inject(method = "handleDataMarker", at = @At("TAIL"))
-    private void adaptiveRuinedPortals$onHandleDataMarker(
-            String name,
-            BlockPos pos,
-            ServerLevelAccessor level,
-            RandomSource random,
-            BoundingBox box,
-            CallbackInfo ci
+    /**
+     * Scans the portal piece's own bounding box (not the expanded theme
+     * region) for the chest that vanilla has already placed by this
+     * point, and overwrites its loot table if a mapping exists for the
+     * resolved destination biome.
+     */
+    private static void applyChestLoot(
+            WorldGenLevel level,
+            BoundingBox pieceBox,
+            NetherPortalDestinationHandler.NetherTargetResult target,
+            RandomSource random
     ) {
-        if (!"chest".equals(name)) {
+        var biomeKey = target.getBiomeKey().orElse(null);
+
+        if (biomeKey == null) {
+            LOGGER.info("[LOOT] Destination biome has no resource key — skipping loot override.");
             return;
         }
 
-        if (PortalSurroundingProcessor.NETHER_GENERATION_PROVIDER == null) {
-            LOGGER.warn("[LOOT] NetherGenerationProvider is not initialized!");
+        var newLootTable = PortalChestLootTables.getLootTable(biomeKey);
+
+        if (newLootTable == null) {
+            LOGGER.info("[LOOT] No custom loot table registered for biome {} — leaving vanilla loot.", target.getBiomePath());
             return;
         }
 
-        try {
-            NetherPortalDestinationHandler.NetherTargetResult target =
-                    PortalSurroundingProcessor.NETHER_GENERATION_PROVIDER
-                            .getNetherTarget(pos);
+        BlockPos.betweenClosedStream(pieceBox).forEach(blockPos -> {
+            BlockState state = level.getBlockState(blockPos);
 
-            var biomeKey = target.getBiomeKey().orElse(null);
-
-            if (biomeKey == null) {
-                LOGGER.warn(
-                        "[LOOT] Could not resolve biome key for chest at {}",
-                        pos.toShortString()
-                );
+            if (!(state.getBlock() instanceof ChestBlock)) {
                 return;
             }
 
-            var lootTable = PortalChestLootTables.getLootTable(biomeKey);
+            LOGGER.info("[LOOT] Chest found at {} (immutable copy, must re-fetch)", blockPos.toShortString());
 
-            if (lootTable == null) {
-                LOGGER.info(
-                        "[LOOT] No custom loot table for biome {}",
-                        target.getBiomePath()
-                );
-                return;
-            }
-
-            var blockEntity = level.getBlockEntity(pos);
-
-            if (blockEntity instanceof RandomizableContainerBlockEntity chest) {
+            if (level.getBlockEntity(blockPos) instanceof RandomizableContainerBlockEntity chest) {
                 chest.setLootTable(
-                        ResourceKey.create(Registries.LOOT_TABLE, lootTable),
+                        ResourceKey.create(Registries.LOOT_TABLE, newLootTable),
                         random.nextLong()
                 );
-
-                LOGGER.info(
-                        "[LOOT] Chest at {} -> {} -> {}",
-                        pos.toShortString(),
-                        target.getBiomePath(),
-                        lootTable
-                );
+                LOGGER.info("[LOOT] Overrode chest at {} -> destination biome {} -> loot table {}",
+                        blockPos.toShortString(), target.getBiomePath(), newLootTable);
+            } else {
+                LOGGER.warn("[LOOT] Block at {} looked like a chest but had no RandomizableContainerBlockEntity.",
+                        blockPos.toShortString());
             }
-        } catch (Exception e) {
-            LOGGER.warn(
-                    "[LOOT] Failed to change chest loot at {}",
-                    pos.toShortString(),
-                    e
-            );
-        }
+        });
     }
 
     private static BoundingBox expandedSpreadRegion(BoundingBox pieceBox) {

@@ -2,15 +2,24 @@
   "type": "minecraft:chest",
   "pools": [
     {
+     "rolls": 1,
+    "entries": [
+      {
+        "type": "minecraft:loot_table",
+        "value": "minecraft:chests/ruined_portal"
+      }
+    ]
+  },
+    {
       "rolls": {
         "type": "minecraft:uniform",
-        "min": 2,
-        "max": 4
+        "min": 1,
+        "max": 2
       },
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:wither_skull",
+          "name": "minecraft:wither_skeleton_skull",
           "weight": 2
         },
         {

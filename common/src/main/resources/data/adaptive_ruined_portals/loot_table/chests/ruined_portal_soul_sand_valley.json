@@ -2,10 +2,19 @@
   "type": "minecraft:chest",
   "pools": [
     {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "value": "minecraft:chests/ruined_portal"
+        }
+      ]
+    },
+    {
       "rolls": {
         "type": "minecraft:uniform",
-        "min": 2,
-        "max": 4
+        "min": 1,
+        "max": 2
       },
       "entries": [
         {
@@ -44,8 +53,8 @@
           "weight": 8,
           "functions": [
             {
-              "function": "minecraft:enchant_with_levels",
-              "levels": {
+              "function": "minecraft:set_count",
+              "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
                 "max": 3
@@ -56,11 +65,6 @@
         {
           "type": "minecraft:empty",
           "weight": 4
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:dried_ghast",
-          "weight": 2
         },
         {
           "type": "minecraft:item",

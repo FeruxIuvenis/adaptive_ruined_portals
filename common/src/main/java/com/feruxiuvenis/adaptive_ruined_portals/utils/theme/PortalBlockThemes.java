@@ -1,7 +1,7 @@
-package com.feruxiuvenis.adaptive_ruined_portals.utils;
+package com.feruxiuvenis.adaptive_ruined_portals.utils.theme;
 
-import com.feruxiuvenis.adaptive_ruined_portals.utils.PortalBlockTheme.ReplacementRule;
-import com.feruxiuvenis.adaptive_ruined_portals.utils.PortalBlockTheme.SurfaceDecoration;
+import com.feruxiuvenis.adaptive_ruined_portals.utils.theme.PortalBlockTheme.ReplacementRule;
+import com.feruxiuvenis.adaptive_ruined_portals.utils.theme.PortalBlockTheme.SurfaceDecoration;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
@@ -39,8 +39,7 @@ public final class PortalBlockThemes {
                                     0.35F,
                                     List.of(
                                             Blocks.CRIMSON_FUNGUS.defaultBlockState(),
-                                            Blocks.CRIMSON_ROOTS.defaultBlockState(),
-                                            Blocks.NETHER_SPROUTS.defaultBlockState()
+                                            Blocks.CRIMSON_ROOTS.defaultBlockState()
                                     )
                             ),
                             new SurfaceDecoration(

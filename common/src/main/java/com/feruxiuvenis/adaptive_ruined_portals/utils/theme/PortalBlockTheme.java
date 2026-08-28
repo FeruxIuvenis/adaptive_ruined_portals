@@ -1,4 +1,4 @@
-package com.feruxiuvenis.adaptive_ruined_portals.utils;
+package com.feruxiuvenis.adaptive_ruined_portals.utils.theme;
 
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;

@@ -3,12 +3,17 @@ package com.feruxiuvenis.adaptive_ruined_portals.mixin;
 import com.feruxiuvenis.adaptive_ruined_portals.utils.NetherPortalDestinationHandler;
 import com.feruxiuvenis.adaptive_ruined_portals.utils.PortalBlockTheme;
 import com.feruxiuvenis.adaptive_ruined_portals.utils.PortalBlockThemes;
+import com.feruxiuvenis.adaptive_ruined_portals.utils.PortalChestLootTables;
 import com.feruxiuvenis.adaptive_ruined_portals.worldgen.PortalSurroundingProcessor;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -65,13 +70,64 @@ public abstract class RuinedPortalPieceMixin {
 
         var theme = target.getBiomeKey().map(PortalBlockThemes::getTheme).orElse(null);
 
-        if (theme == null) {
+        if (theme != null) {
+            LOGGER.info("[MIXIN] Applying theme for biome {}", target.getBiomePath());
+            applyTheme(level, self.getBoundingBox(), theme, random);
+        } else {
             LOGGER.info("[MIXIN] No theme registered for biome {} — skipping retheme.", target.getBiomePath());
+        }
+
+        // --- chest loot override, using the same proven injection point ---
+        applyChestLoot(level, self.getBoundingBox(), target, random);
+    }
+
+    /**
+     * Scans the portal piece's own bounding box (not the expanded theme
+     * region) for the chest that vanilla has already placed by this
+     * point, and overwrites its loot table if a mapping exists for the
+     * resolved destination biome.
+     */
+    private static void applyChestLoot(
+            WorldGenLevel level,
+            BoundingBox pieceBox,
+            NetherPortalDestinationHandler.NetherTargetResult target,
+            RandomSource random
+    ) {
+        var biomeKey = target.getBiomeKey().orElse(null);
+
+        if (biomeKey == null) {
+            LOGGER.info("[LOOT] Destination biome has no resource key — skipping loot override.");
             return;
         }
 
-        LOGGER.info("[MIXIN] Applying theme for biome {}", target.getBiomePath());
-        applyTheme(level, self.getBoundingBox(), theme, random);
+        var newLootTable = PortalChestLootTables.getLootTable(biomeKey);
+
+        if (newLootTable == null) {
+            LOGGER.info("[LOOT] No custom loot table registered for biome {} — leaving vanilla loot.", target.getBiomePath());
+            return;
+        }
+
+        BlockPos.betweenClosedStream(pieceBox).forEach(blockPos -> {
+            BlockState state = level.getBlockState(blockPos);
+
+            if (!(state.getBlock() instanceof ChestBlock)) {
+                return;
+            }
+
+            LOGGER.info("[LOOT] Chest found at {} (immutable copy, must re-fetch)", blockPos.toShortString());
+
+            if (level.getBlockEntity(blockPos) instanceof RandomizableContainerBlockEntity chest) {
+                chest.setLootTable(
+                        ResourceKey.create(Registries.LOOT_TABLE, newLootTable),
+                        random.nextLong()
+                );
+                LOGGER.info("[LOOT] Overrode chest at {} -> destination biome {} -> loot table {}",
+                        blockPos.toShortString(), target.getBiomePath(), newLootTable);
+            } else {
+                LOGGER.warn("[LOOT] Block at {} looked like a chest but had no RandomizableContainerBlockEntity.",
+                        blockPos.toShortString());
+            }
+        });
     }
 
     private static BoundingBox expandedSpreadRegion(BoundingBox pieceBox) {
@@ -95,11 +151,6 @@ public abstract class RuinedPortalPieceMixin {
     ) {
         BoundingBox region = expandedSpreadRegion(pieceBox);
 
-        /*
-         * Phase 1: block replacement. Must fully finish before phase 2,
-         * since decorations check the FINAL state of a surface block
-         * (e.g. nylium after replacement), not the original netherrack.
-         */
         BlockPos.betweenClosedStream(region).forEach(blockPos -> {
             BlockState current = level.getBlockState(blockPos);
             BlockState themed = theme.resolveReplacement(current, random);
@@ -109,11 +160,6 @@ public abstract class RuinedPortalPieceMixin {
             }
         });
 
-        /*
-         * Phase 2: surface decorations (fungus, roots, vines, fire,
-         * skulls). Only placed into currently-air space directly above
-         * a qualifying surface block, so we never overwrite terrain.
-         */
         BlockPos.betweenClosedStream(region).forEach(blockPos -> {
             BlockState surfaceState = level.getBlockState(blockPos);
             BlockPos abovePos = blockPos.above();

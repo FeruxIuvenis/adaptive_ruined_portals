@@ -86,10 +86,10 @@ public final class PortalBlockThemes {
                     Map.of(
                             Blocks.NETHERRACK, List.of(
                                     ReplacementRule.chance(0.1F, Blocks.BONE_BLOCK.defaultBlockState()),
-                                    ReplacementRule.always(Blocks.SOUL_SAND.defaultBlockState())
+                                    ReplacementRule.always(Blocks.SOUL_SOIL.defaultBlockState())
                             ),
                             Blocks.MAGMA_BLOCK, List.of(
-                                    ReplacementRule.always(Blocks.SOUL_SOIL.defaultBlockState())
+                                    ReplacementRule.always(Blocks.SOUL_SAND.defaultBlockState())
                             )
                     ),
                     List.of(

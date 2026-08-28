@@ -15,6 +15,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class PortalSurroundingProcessor extends StructureProcessor {
@@ -31,6 +32,7 @@ public class PortalSurroundingProcessor extends StructureProcessor {
      * Supplied by the individual mod-loader implementations.
      */
     public static NetherGenerationProvider NETHER_GENERATION_PROVIDER;
+
 
     @Override
     public StructureTemplate.StructureBlockInfo processBlock(
@@ -51,16 +53,15 @@ public class PortalSurroundingProcessor extends StructureProcessor {
             return currentBlockInfo;
         }
 
-        /*
-         * pivot represents the origin of this ruined portal.
-         * Every block processed for this structure uses the same
-         * destination calculation.
-         */
         NetherPortalDestinationHandler.NetherTargetResult target =
                 NETHER_GENERATION_PROVIDER.getNetherTarget(pivot);
 
         BlockState currentState = currentBlockInfo.state();
 
+        // debug log now that currentState exists
+        LOGGER.info("[DEBUG] block={} nbt={}", currentState.getBlock(), currentBlockInfo.nbt());
+
+        // --- existing block-swap logic (unchanged) ---
         if (target.isBiome(Biomes.BASALT_DELTAS)) {
             if (currentState.is(Blocks.NETHERRACK)) {
                 return new StructureTemplate.StructureBlockInfo(

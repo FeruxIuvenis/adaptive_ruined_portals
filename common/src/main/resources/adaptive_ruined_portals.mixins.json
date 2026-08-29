@@ -5,7 +5,9 @@
   "refmap": "${mod_id}.refmap.json",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "RuinedPortalPieceMixin"
+    "RuinedPortalPieceMixin",
+    "NetherPortalBlockMixin",
+    "PortalShapeMixin"
   ],
   "client": [
     "MixinMinecraft"

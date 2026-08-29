@@ -17,6 +17,9 @@
     "entrypoints": {
         "main": [
             "com.feruxiuvenis.adaptive_ruined_portals.FabricAdaptiveRuinedPortals"
+        ],
+        "client": [
+            "com.feruxiuvenis.adaptive_ruined_portals.client.FabricAdaptiveRuinedPortalsClient"
         ]
     },
     "mixins": [

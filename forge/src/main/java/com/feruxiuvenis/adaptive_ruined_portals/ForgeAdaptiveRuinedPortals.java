@@ -2,6 +2,7 @@ package com.feruxiuvenis.adaptive_ruined_portals;
 
 import com.feruxiuvenis.adaptive_ruined_portals.utils.NetherPortalDestinationHandler;
 import com.feruxiuvenis.adaptive_ruined_portals.worldgen.PortalSurroundingProcessor;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.MinecraftServer;
@@ -13,13 +14,22 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.event.server.ServerStartingEvent;
+
 import net.minecraftforge.server.ServerLifecycleHooks;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Mod("adaptive_ruined_portals")
+@Mod.EventBusSubscriber(
+        modid = "adaptive_ruined_portals",
+        bus = Mod.EventBusSubscriber.Bus.FORGE
+)
 public class ForgeAdaptiveRuinedPortals {
 
     public static final DeferredRegister<StructureProcessorType<?>> PROCESSORS =
@@ -43,8 +53,24 @@ public class ForgeAdaptiveRuinedPortals {
         PortalSurroundingProcessor.TYPE =
                 PORTAL_PROCESSOR::get;
 
+        System.out.println(
+                "[FORGE] AdaptiveRuinedPortals Forge constructor initialized"
+        );
+    }
+
+    @SubscribeEvent
+    public static void onServerStarting(ServerStartingEvent event) {
+        System.out.println(
+                "[FORGE] ServerStartingEvent fired"
+        );
+
         PortalSurroundingProcessor.NETHER_GENERATION_PROVIDER =
                 ForgeAdaptiveRuinedPortals::getNetherTarget;
+
+        System.out.println(
+                "[FORGE] NetherGenerationProvider initialized: "
+                        + PortalSurroundingProcessor.NETHER_GENERATION_PROVIDER
+        );
     }
 
     private static ServerLevel getNetherLevel() {
@@ -89,10 +115,25 @@ public class ForgeAdaptiveRuinedPortals {
     private static NetherPortalDestinationHandler.NetherTargetResult getNetherTarget(
             BlockPos overworldPos
     ) {
-        return NetherPortalDestinationHandler.getNetherTarget(
-                overworldPos,
-                getNetherBiomeSource(),
-                getNetherClimateSampler()
+        System.out.println(
+                "[FORGE] Calculating Nether target for "
+                        + overworldPos.toShortString()
         );
+
+        NetherPortalDestinationHandler.NetherTargetResult result =
+                NetherPortalDestinationHandler.getNetherTarget(
+                        overworldPos,
+                        getNetherBiomeSource(),
+                        getNetherClimateSampler()
+                );
+
+        System.out.println(
+                "[FORGE] Nether target resolved: "
+                        + overworldPos.toShortString()
+                        + " -> "
+                        + result.getBiomePath()
+        );
+
+        return result;
     }
 }

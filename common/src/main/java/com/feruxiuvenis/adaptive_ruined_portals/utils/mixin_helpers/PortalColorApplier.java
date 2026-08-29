@@ -34,9 +34,14 @@ public final class PortalColorApplier {
             BlockState state = level.getBlockState(blockPos);
             if (!state.is(Blocks.NETHER_PORTAL)) return;
 
-            level.setBlock(blockPos, state.setValue(PortalBiomeColorProperty.PORTAL_BIOME_COLOR, color), 2);
+            LOGGER.info("[COLOR-DEBUG] Found nether_portal block at {}", blockPos.toShortString());
+
+            BlockState newState = state.setValue(PortalBiomeColorProperty.PORTAL_BIOME_COLOR, color);
+            level.setBlock(blockPos, newState, 2);
+
+            LOGGER.info("[COLOR-DEBUG] New state applied: {}", newState);
         });
 
-        LOGGER.info("[COLOR] Portal blocks recolored -> {} for biome {}", color, target.getBiomePath());
+        LOGGER.info("[COLOR] Finished scanning region for biome {} (color={})", target.getBiomePath(), color);
     }
 }

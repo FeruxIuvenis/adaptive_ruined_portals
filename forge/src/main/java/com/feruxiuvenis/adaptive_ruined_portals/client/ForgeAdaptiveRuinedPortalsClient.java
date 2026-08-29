@@ -13,6 +13,7 @@ public class ForgeAdaptiveRuinedPortalsClient {
 
     @SubscribeEvent
     public static void onRegisterBlockColors(RegisterColorHandlersEvent.Block event) {
+        System.out.println("[COLOR-DEBUG] Registering nether_portal block color provider (Forge)");
         event.register(
                 (state, level, pos, tintIndex) ->
                         PortalColorPalette.toArgb(

@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 
 @FunctionalInterface
 public interface NetherGenerationProvider {
-
     NetherPortalDestinationHandler.NetherTargetResult getNetherTarget(
             BlockPos overworldPos
     );

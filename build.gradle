@@ -7,6 +7,6 @@ plugins {
 
 tasks.register("buildAll") {
     group = "build"
-    description = "Builds all platform jars (Fabric, Forge, NeoForge)."
-    dependsOn(":fabric:build", ":forge:build", ":neoforge:build")
+    description = "Builds all platform jars (Fabric, NeoForge)."
+    dependsOn(":fabric:build", ":neoforge:build")
 }

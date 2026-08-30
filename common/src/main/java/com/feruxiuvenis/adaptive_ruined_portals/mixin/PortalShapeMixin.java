@@ -27,14 +27,16 @@ public abstract class PortalShapeMixin {
     private static final Logger LOGGER =
             LoggerFactory.getLogger("AdaptiveRuinedPortals");
 
-    @Shadow @Final private LevelAccessor level;
     @Shadow private BlockPos bottomLeft;
     @Shadow private int height;
     @Shadow @Final private int width;
     @Shadow @Final private Direction rightDir;
 
     @Inject(method = "createPortalBlocks", at = @At("TAIL"))
-    private void adaptiveRuinedPortals$onCreatePortalBlocks(CallbackInfo ci) {
+    private void adaptiveRuinedPortals$onCreatePortalBlocks(
+            LevelAccessor level,
+            CallbackInfo ci
+    ) {
         if (bottomLeft == null) return;
 
         if (!(level instanceof ServerLevel serverLevel) || serverLevel.dimension() != Level.OVERWORLD) {

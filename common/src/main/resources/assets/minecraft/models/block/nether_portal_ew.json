@@ -1,7 +1,7 @@
 {
   "textures": {
     "particle": "block/nether_portal",
-    "portal": "block/nether_portal"
+    "portal": "adaptive_ruined_portals:block/nether_portal"
   },
   "elements": [
     {   "from": [ 6, 0, 0 ],

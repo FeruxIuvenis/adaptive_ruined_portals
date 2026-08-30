@@ -1,8 +1,11 @@
 package com.feruxiuvenis.adaptive_ruined_portals;
 
 import com.feruxiuvenis.adaptive_ruined_portals.utils.NetherPortalDestinationHandler;
+import com.feruxiuvenis.adaptive_ruined_portals.utils.color.PortalBiomeColorProperty;
+import com.feruxiuvenis.adaptive_ruined_portals.utils.color.PortalColorPalette;
 import com.feruxiuvenis.adaptive_ruined_portals.worldgen.PortalSurroundingProcessor;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -12,6 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.biome.Climate;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
@@ -21,7 +25,6 @@ public class FabricAdaptiveRuinedPortals implements ModInitializer {
 
     @Override
     public void onInitialize() {
-
         StructureProcessorType<PortalSurroundingProcessor> type =
                 Registry.register(
                         BuiltInRegistries.STRUCTURE_PROCESSOR,

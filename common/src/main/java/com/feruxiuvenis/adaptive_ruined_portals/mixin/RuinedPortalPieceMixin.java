@@ -1,9 +1,10 @@
 package com.feruxiuvenis.adaptive_ruined_portals.mixin;
 
-import com.feruxiuvenis.adaptive_ruined_portals.utils.mixin_helpers.PortalChestLootApplier;
-import com.feruxiuvenis.adaptive_ruined_portals.utils.mixin_helpers.PortalThemeApplier;
 import com.feruxiuvenis.adaptive_ruined_portals.utils.NetherPortalDestinationHandler;
 import com.feruxiuvenis.adaptive_ruined_portals.utils.theme.PortalBlockThemes;
+import com.feruxiuvenis.adaptive_ruined_portals.utils.mixin_helpers.PortalChestLootApplier;
+import com.feruxiuvenis.adaptive_ruined_portals.utils.mixin_helpers.PortalColorApplier;
+import com.feruxiuvenis.adaptive_ruined_portals.utils.mixin_helpers.PortalThemeApplier;
 import com.feruxiuvenis.adaptive_ruined_portals.worldgen.PortalSurroundingProcessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
@@ -80,6 +81,11 @@ public abstract class RuinedPortalPieceMixin {
                 target,
                 random
         );
-    }
 
+        PortalColorApplier.applyPortalColor(
+                level,
+                self.getBoundingBox(),
+                target
+        );
+    }
 }

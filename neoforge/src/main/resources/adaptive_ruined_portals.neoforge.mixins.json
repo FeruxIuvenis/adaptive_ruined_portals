@@ -7,7 +7,7 @@
     "RuinedPortalPieceMixin"
   ],
   "client": [
-    "MixinTitleScreen"
+    "PortalShapeMixin"
   ],
   "server": [],
   "injectors": {

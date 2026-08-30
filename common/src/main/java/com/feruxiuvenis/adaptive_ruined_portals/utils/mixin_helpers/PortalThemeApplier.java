@@ -8,7 +8,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 
 public final class PortalThemeApplier {
-
     private static final int SPREAD_HORIZONTAL_RADIUS = 14;
     private static final int SPREAD_VERTICAL_PADDING = 15;
 

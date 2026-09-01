@@ -47,7 +47,7 @@ public class NeoForgeAdaptiveRuinedPortals {
         PortalSurroundingProcessor.NETHER_GENERATION_PROVIDER =
                 NeoForgeAdaptiveRuinedPortals::getNetherTarget;
 
-        if (FMLEnvironment.dist == Dist.CLIENT) {
+        if (FMLEnvironment.getDist() == Dist.CLIENT) {
             modEventBus.addListener(NeoForgeAdaptiveRuinedPortalsClient::onRegisterBlockColors);
         }
     }

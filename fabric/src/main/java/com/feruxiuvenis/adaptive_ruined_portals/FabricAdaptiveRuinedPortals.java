@@ -9,7 +9,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
@@ -28,7 +28,7 @@ public class FabricAdaptiveRuinedPortals implements ModInitializer {
         StructureProcessorType<PortalSurroundingProcessor> type =
                 Registry.register(
                         BuiltInRegistries.STRUCTURE_PROCESSOR,
-                        ResourceLocation.fromNamespaceAndPath(
+                        Identifier.fromNamespaceAndPath(
                                 "adaptive_ruined_portals",
                                 "portal_surrounding"
                         ),

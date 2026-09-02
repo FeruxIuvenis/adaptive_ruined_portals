@@ -98,7 +98,7 @@ public final class NetherPortalDestinationHandler {
         public String getBiomePath() {
             return biomeHolder
                     .unwrapKey()
-                    .map(key -> key.location().toString())
+                    .map(key -> key.identifier().toString())
                     .orElse("unknown");
         }
     }

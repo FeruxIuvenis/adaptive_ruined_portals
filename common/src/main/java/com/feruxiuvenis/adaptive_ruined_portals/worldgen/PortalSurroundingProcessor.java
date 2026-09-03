@@ -10,31 +10,23 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-import java.util.function.Supplier;
-
-public class PortalSurroundingProcessor extends StructureProcessor {
+public class PortalSurroundingProcessor implements StructureProcessor {
 
     private static final Logger LOGGER =
             LoggerFactory.getLogger("AdaptiveRuinedPortals");
 
-    public static final MapCodec<PortalSurroundingProcessor> CODEC =
+    public static final MapCodec<PortalSurroundingProcessor> MAP_CODEC =
             MapCodec.unit(PortalSurroundingProcessor::new);
-
-    public static Supplier<StructureProcessorType<PortalSurroundingProcessor>> TYPE;
 
     /**
      * Supplied by the individual mod-loader implementations.
      */
     public static NetherGenerationProvider NETHER_GENERATION_PROVIDER;
 
-
-    @Override
     public StructureTemplate.StructureBlockInfo processBlock(
             LevelReader level,
             BlockPos position,
@@ -58,10 +50,8 @@ public class PortalSurroundingProcessor extends StructureProcessor {
 
         BlockState currentState = currentBlockInfo.state();
 
-        // debug log now that currentState exists
         LOGGER.info("[DEBUG] block={} nbt={}", currentState.getBlock(), currentBlockInfo.nbt());
 
-        // --- existing block-swap logic (unchanged) ---
         if (target.isBiome(Biomes.BASALT_DELTAS)) {
             if (currentState.is(Blocks.NETHERRACK)) {
                 return new StructureTemplate.StructureBlockInfo(
@@ -84,7 +74,7 @@ public class PortalSurroundingProcessor extends StructureProcessor {
     }
 
     @Override
-    protected StructureProcessorType<?> getType() {
-        return TYPE.get();
+    public MapCodec<PortalSurroundingProcessor> codec() {
+        return MAP_CODEC;
     }
 }

@@ -1,11 +1,8 @@
 package com.feruxiuvenis.adaptive_ruined_portals;
 
 import com.feruxiuvenis.adaptive_ruined_portals.utils.NetherPortalDestinationHandler;
-import com.feruxiuvenis.adaptive_ruined_portals.utils.color.PortalBiomeColorProperty;
-import com.feruxiuvenis.adaptive_ruined_portals.utils.color.PortalColorPalette;
 import com.feruxiuvenis.adaptive_ruined_portals.worldgen.PortalSurroundingProcessor;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -15,27 +12,22 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.biome.Climate;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.RandomState;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 
 public class FabricAdaptiveRuinedPortals implements ModInitializer {
     private static MinecraftServer server;
 
     @Override
     public void onInitialize() {
-        StructureProcessorType<PortalSurroundingProcessor> type =
-                Registry.register(
-                        BuiltInRegistries.STRUCTURE_PROCESSOR,
-                        Identifier.fromNamespaceAndPath(
-                                "adaptive_ruined_portals",
-                                "portal_surrounding"
-                        ),
-                        () -> PortalSurroundingProcessor.CODEC
-                );
-
-        PortalSurroundingProcessor.TYPE = () -> type;
+        Registry.register(
+                BuiltInRegistries.STRUCTURE_PROCESSOR,
+                Identifier.fromNamespaceAndPath(
+                        "adaptive_ruined_portals",
+                        "portal_surrounding"
+                ),
+                PortalSurroundingProcessor.MAP_CODEC
+        );
 
         ServerLifecycleEvents.SERVER_STARTED.register(
                 startedServer -> server = startedServer
@@ -69,19 +61,13 @@ public class FabricAdaptiveRuinedPortals implements ModInitializer {
 
     private static BiomeSource getNetherBiomeSource() {
         ServerLevel nether = getNetherLevel();
-
-        ChunkGenerator generator =
-                nether.getChunkSource().getGenerator();
-
+        ChunkGenerator generator = nether.getChunkSource().getGenerator();
         return generator.getBiomeSource();
     }
 
     private static Climate.Sampler getNetherClimateSampler() {
         ServerLevel nether = getNetherLevel();
-
-        RandomState randomState =
-                nether.getChunkSource().randomState();
-
+        RandomState randomState = nether.getChunkSource().randomState();
         return randomState.sampler();
     }
 

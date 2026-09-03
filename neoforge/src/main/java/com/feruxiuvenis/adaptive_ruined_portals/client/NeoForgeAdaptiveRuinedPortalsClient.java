@@ -2,21 +2,47 @@ package com.feruxiuvenis.adaptive_ruined_portals.client;
 
 import com.feruxiuvenis.adaptive_ruined_portals.utils.color.PortalBiomeColorProperty;
 import com.feruxiuvenis.adaptive_ruined_portals.utils.color.PortalColorPalette;
+import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+
+import java.util.List;
 
 public final class NeoForgeAdaptiveRuinedPortalsClient {
 
     private NeoForgeAdaptiveRuinedPortalsClient() {
     }
 
-    public static void onRegisterBlockColors(RegisterColorHandlersEvent.Block event) {
-        System.out.println("[COLOR-DEBUG] Registering nether_portal block color provider (NeoForge)");
+    public static void onRegisterBlockColors(
+            RegisterColorHandlersEvent.BlockTintSources event
+    ) {
+        System.out.println(
+                "[COLOR-DEBUG] Registering nether_portal block color provider (NeoForge)"
+        );
+
         event.register(
-                (state, level, pos, tintIndex) ->
-                        PortalColorPalette.toArgb(
-                                state.getValue(PortalBiomeColorProperty.PORTAL_BIOME_COLOR)
-                        ),
+                List.of(
+                        new BlockTintSource() {
+
+                            @Override
+                            public int color(BlockState blockState) {
+                                return 0;
+                            }
+
+                            public int colorInWorld(
+                                    net.minecraft.world.level.block.state.BlockState state,
+                                    net.minecraft.world.level.BlockAndLightGetter level,
+                                    net.minecraft.core.BlockPos pos
+                            ) {
+                                return PortalColorPalette.toArgb(
+                                        state.getValue(
+                                                PortalBiomeColorProperty.PORTAL_BIOME_COLOR
+                                        )
+                                );
+                            }
+                        }
+                ),
                 Blocks.NETHER_PORTAL
         );
     }

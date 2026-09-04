@@ -24,21 +24,10 @@ public final class NeoForgeAdaptiveRuinedPortalsClient {
         event.register(
                 List.of(
                         new BlockTintSource() {
-
                             @Override
-                            public int color(BlockState blockState) {
-                                return 0;
-                            }
-
-                            public int colorInWorld(
-                                    net.minecraft.world.level.block.state.BlockState state,
-                                    net.minecraft.world.level.BlockAndLightGetter level,
-                                    net.minecraft.core.BlockPos pos
-                            ) {
+                            public int color(BlockState state) {
                                 return PortalColorPalette.toArgb(
-                                        state.getValue(
-                                                PortalBiomeColorProperty.PORTAL_BIOME_COLOR
-                                        )
+                                        state.getValue(PortalBiomeColorProperty.PORTAL_BIOME_COLOR)
                                 );
                             }
                         }

@@ -5,7 +5,7 @@ import com.feruxiuvenis.adaptive_ruined_portals.utils.theme.PortalBlockThemes;
 import com.feruxiuvenis.adaptive_ruined_portals.utils.mixin_helpers.PortalChestLootApplier;
 import com.feruxiuvenis.adaptive_ruined_portals.utils.mixin_helpers.PortalColorApplier;
 import com.feruxiuvenis.adaptive_ruined_portals.utils.mixin_helpers.PortalThemeApplier;
-import com.feruxiuvenis.adaptive_ruined_portals.worldgen.PortalSurroundingProcessor;
+import com.feruxiuvenis.adaptive_ruined_portals.worldgen.NetherGenerationRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
@@ -44,14 +44,14 @@ public abstract class RuinedPortalPieceMixin {
 
         LOGGER.info("[MIXIN] RuinedPortalPiece.postProcess triggered at {}", overworldPos.toShortString());
 
-        if (PortalSurroundingProcessor.NETHER_GENERATION_PROVIDER == null) {
+        if (NetherGenerationRegistry.NETHER_GENERATION_PROVIDER == null) {
             LOGGER.warn("[MIXIN] NetherGenerationProvider has not been initialized yet.");
             return;
         }
 
         NetherPortalDestinationHandler.NetherTargetResult target;
         try {
-            target = PortalSurroundingProcessor.NETHER_GENERATION_PROVIDER
+            target = NetherGenerationRegistry.NETHER_GENERATION_PROVIDER
                     .getNetherTarget(overworldPos);
         } catch (Exception e) {
             LOGGER.warn("[MIXIN] Failed to compute Nether target for {}: {}",

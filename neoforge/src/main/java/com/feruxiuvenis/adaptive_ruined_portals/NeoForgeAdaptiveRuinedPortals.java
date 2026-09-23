@@ -2,10 +2,8 @@ package com.feruxiuvenis.adaptive_ruined_portals;
 
 import com.feruxiuvenis.adaptive_ruined_portals.client.NeoForgeAdaptiveRuinedPortalsClient;
 import com.feruxiuvenis.adaptive_ruined_portals.utils.NetherPortalDestinationHandler;
-import com.feruxiuvenis.adaptive_ruined_portals.worldgen.PortalSurroundingProcessor;
-import com.mojang.serialization.MapCodec;
+import com.feruxiuvenis.adaptive_ruined_portals.worldgen.NetherGenerationRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
@@ -13,37 +11,17 @@ import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.RandomState;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 @Mod("adaptive_ruined_portals")
 public class NeoForgeAdaptiveRuinedPortals {
 
-    public static final DeferredRegister<MapCodec<? extends StructureProcessor>> PROCESSORS =
-            DeferredRegister.create(
-                    Registries.STRUCTURE_PROCESSOR,
-                    "adaptive_ruined_portals"
-            );
-
-    public static final DeferredHolder<
-    MapCodec<? extends StructureProcessor>,
-    MapCodec<PortalSurroundingProcessor>
-        > PORTAL_PROCESSOR =
-            PROCESSORS.register(
-            "portal_surrounding",
-            () -> PortalSurroundingProcessor.MAP_CODEC
-            );
-
     public NeoForgeAdaptiveRuinedPortals(IEventBus modEventBus) {
-        PROCESSORS.register(modEventBus);
-
-        PortalSurroundingProcessor.NETHER_GENERATION_PROVIDER =
+        NetherGenerationRegistry.NETHER_GENERATION_PROVIDER =
                 NeoForgeAdaptiveRuinedPortals::getNetherTarget;
 
         if (FMLEnvironment.getDist() == Dist.CLIENT) {

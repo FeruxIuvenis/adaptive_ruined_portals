@@ -1,12 +1,10 @@
 package com.feruxiuvenis.adaptive_ruined_portals;
 
 import com.feruxiuvenis.adaptive_ruined_portals.utils.NetherPortalDestinationHandler;
-import com.feruxiuvenis.adaptive_ruined_portals.worldgen.PortalSurroundingProcessor;
+import com.feruxiuvenis.adaptive_ruined_portals.worldgen.NetherGenerationRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
@@ -20,15 +18,6 @@ public class FabricAdaptiveRuinedPortals implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        Registry.register(
-                BuiltInRegistries.STRUCTURE_PROCESSOR,
-                Identifier.fromNamespaceAndPath(
-                        "adaptive_ruined_portals",
-                        "portal_surrounding"
-                ),
-                PortalSurroundingProcessor.MAP_CODEC
-        );
-
         ServerLifecycleEvents.SERVER_STARTED.register(
                 startedServer -> server = startedServer
         );
@@ -37,7 +26,7 @@ public class FabricAdaptiveRuinedPortals implements ModInitializer {
                 stoppingServer -> server = null
         );
 
-        PortalSurroundingProcessor.NETHER_GENERATION_PROVIDER =
+        NetherGenerationRegistry.NETHER_GENERATION_PROVIDER =
                 FabricAdaptiveRuinedPortals::getNetherTarget;
     }
 
@@ -72,7 +61,7 @@ public class FabricAdaptiveRuinedPortals implements ModInitializer {
     }
 
     private static NetherPortalDestinationHandler.NetherTargetResult getNetherTarget(
-            net.minecraft.core.BlockPos overworldPos
+            BlockPos overworldPos
     ) {
         return NetherPortalDestinationHandler.getNetherTarget(
                 overworldPos,

@@ -4,7 +4,7 @@ import com.feruxiuvenis.adaptive_ruined_portals.utils.NetherPortalDestinationHan
 import com.feruxiuvenis.adaptive_ruined_portals.utils.color.PortalBiomeColor;
 import com.feruxiuvenis.adaptive_ruined_portals.utils.color.PortalBiomeColors;
 import com.feruxiuvenis.adaptive_ruined_portals.utils.mixin_helpers.PortalColorApplier;
-import com.feruxiuvenis.adaptive_ruined_portals.worldgen.PortalSurroundingProcessor;
+import com.feruxiuvenis.adaptive_ruined_portals.worldgen.NetherGenerationRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -43,14 +43,14 @@ public abstract class PortalShapeMixin {
             return;
         }
 
-        if (PortalSurroundingProcessor.NETHER_GENERATION_PROVIDER == null) {
+        if (NetherGenerationRegistry.NETHER_GENERATION_PROVIDER == null) {
             LOGGER.warn("[COLOR] NetherGenerationProvider not initialized — skipping portal recolor.");
             return;
         }
 
         NetherPortalDestinationHandler.NetherTargetResult target;
         try {
-            target = PortalSurroundingProcessor.NETHER_GENERATION_PROVIDER.getNetherTarget(bottomLeft);
+            target = NetherGenerationRegistry.NETHER_GENERATION_PROVIDER.getNetherTarget(bottomLeft);
         } catch (Exception e) {
             LOGGER.warn("[COLOR] Failed to resolve Nether target for portal at {}: {}",
                     bottomLeft.toShortString(), e.toString());

@@ -5,6 +5,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.QuartPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeResolver;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.biome.Climate;
 import org.slf4j.Logger;
@@ -59,15 +60,16 @@ public final class NetherPortalDestinationHandler {
         int centerQuartY = QuartPos.fromBlock(netherPos.getY());
         int centerQuartZ = QuartPos.fromBlock(netherPos.getZ());
 
+        BiomeResolver resolver = netherBiomeSource.createResolver(netherSampler);
+
         Map<Holder<Biome>, Integer> counts = new HashMap<>();
 
         for (int dx : SAMPLE_OFFSETS_QUART) {
             for (int dz : SAMPLE_OFFSETS_QUART) {
-                Holder<Biome> biome = netherBiomeSource.getNoiseBiome(
+                Holder<Biome> biome = resolver.getNoiseBiome(
                         centerQuartX + dx,
                         centerQuartY,
-                        centerQuartZ + dz,
-                        netherSampler
+                        centerQuartZ + dz
                 );
 
                 counts.merge(biome, 1, Integer::sum);
@@ -77,8 +79,8 @@ public final class NetherPortalDestinationHandler {
         return counts.entrySet().stream()
                 .max(Map.Entry.comparingByValue())
                 .map(Map.Entry::getKey)
-                .orElseGet(() -> netherBiomeSource.getNoiseBiome(
-                        centerQuartX, centerQuartY, centerQuartZ, netherSampler
+                .orElseGet(() -> resolver.getNoiseBiome(
+                        centerQuartX, centerQuartY, centerQuartZ
                 ));
     }
 

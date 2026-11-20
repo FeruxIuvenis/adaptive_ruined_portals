@@ -32,7 +32,6 @@ public class FabricAdaptiveRuinedPortalsClient implements ClientModInitializer {
 
             @Override
             public int color(BlockState state) {
-                // Fallback color when no world context is available (e.g. inventory rendering)
                 return PortalColorPalette.toArgb(
                         state.getValue(PortalBiomeColorProperty.PORTAL_BIOME_COLOR)
                 );

@@ -12,6 +12,7 @@ import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.RandomState;
+import net.minecraft.world.level.levelgen.densityfunction.SamplerContext;
 
 public class FabricAdaptiveRuinedPortals implements ModInitializer {
     private static MinecraftServer server;
@@ -49,15 +50,13 @@ public class FabricAdaptiveRuinedPortals implements ModInitializer {
     }
 
     private static BiomeSource getNetherBiomeSource() {
-        ServerLevel nether = getNetherLevel();
-        ChunkGenerator generator = nether.getChunkSource().getGenerator();
+        ChunkGenerator generator = getNetherLevel().getChunkSource().getGenerator();
         return generator.getBiomeSource();
     }
 
     private static Climate.Sampler getNetherClimateSampler() {
-        ServerLevel nether = getNetherLevel();
-        RandomState randomState = nether.getChunkSource().randomState();
-        return randomState.sampler();
+        RandomState randomState = getNetherLevel().getChunkSource().randomState();
+        return randomState.createClimateSampler(SamplerContext.EMPTY_UNCACHED);
     }
 
     private static NetherPortalDestinationHandler.NetherTargetResult getNetherTarget(
